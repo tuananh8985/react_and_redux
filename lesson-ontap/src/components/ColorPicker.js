@@ -1,3 +1,4 @@
+// Phần quản lý về các màu lựa chọn
 import React, { Component } from 'react';
 
 class ColorPicker extends Component {
@@ -8,11 +9,13 @@ class ColorPicker extends Component {
             colors : ['red','green','blue','#ccc']
         };
     }
+    // 1.Tương tác ngược lại với Component App.
     setActiveColor(color){
         // Kiểm tra xem khi click vào có trả ra màu tương ứng không
         //console.log(1,color);
         this.props.onReceiveColor(color);
     }
+    // Thiết lập CSS cho component ColorPicker.
     showColor(color){
         //kiểm tra xem biến color bên App truyền vào cho ColorPicker là gì.Có thể kiểm tra ở bất kỳ đâu
         //console.log(this.props.color); 
@@ -29,6 +32,7 @@ class ColorPicker extends Component {
                         style = {this.showColor(color)}
                         className = {this.props.color === color ? 'active' : ''}
                         onClick = { () => this.setActiveColor(color)}
+                        // Ko cần xử lý thế này,chỉ cần thiết lập arrow function ở hàm setActiveColor là đc.
                     ></span>
         });
 
