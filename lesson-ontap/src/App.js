@@ -13,6 +13,8 @@ class App extends Component {
             color : 'red',
             fontSize: 15
         }
+        // 1.Ko nên sử dụng cách khai báo này mà cần khai báo sử dụng arrow function .
+        // 2.Khi xử lý sự kiện chỉ cần gọi onReceiveColor = {this.onSetColor} chứ ko cần gọi onReceiveColor = {() => this.onSetColor}
         this.onSetColor = this.onSetColor.bind(this);
     }
     // Nhận đc màu từ ColorPicker truyền lên =>Set ngược lại color cho ColorPicker.

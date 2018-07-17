@@ -32,6 +32,7 @@ class ColorPicker extends Component {
                         style = {this.showColor(color)}
                         className = {this.props.color === color ? 'active' : ''}
                         onClick = { () => this.setActiveColor(color)}
+                        // Ko cần xử lý thế này,chỉ cần thiết lập arrow function ở hàm setActiveColor là đc.
                     ></span>
         });
 
