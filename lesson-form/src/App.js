@@ -14,12 +14,10 @@ class App extends Component {
         chkbStatus : true
     };
   }
+//   Hàm xử lý chung cho tất cả các form input
   onHandleChange = (event) =>{
-        // this.setState({
-        //     username  : event.target.value;
-        // });
-        var target = event.target;
-        var name = target.name;
+        var target = event.target; //Lấy ra element tương ứng
+        var name = target.name; //Lấy ra các thuộc tính của form input như value,name,type,className..
         // Kiểm tra check riêng của checkbox
         var value = target.type === 'checkbox'? target.checked:target.value;
         this.setState({
