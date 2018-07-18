@@ -80,9 +80,10 @@ class App extends Component {
             isDisplayFrom : false
         });
     }
-    // Cập nhật trạng thái
+    // Cập nhật trạng thái-->Update status
     onUpdateStatus = (id) =>{
         var { tasks } = this.state;
+        // Hàm findIndex trả về index của bản ghi khi chọn update status.
         var index = this.findIndex(id);
         if(index !== -1){
             console.log('index',index);
@@ -90,12 +91,14 @@ class App extends Component {
             this.setState({
                 tasks : tasks
             });
+            // Sau khi thiết lập state,cần lưu vào localStorage
             localStorage.setItem('tasks',JSON.stringify(tasks));
         }
     }
     findIndex = (id) =>{
         var { tasks } = this.state;
         var result = -1;
+        // Duyệt qua tất cả danh sách,nếu có id trùng id đc TaskItem gửi lên =>trả về index 
         tasks.forEach((task,index) =>{
             if(task.id === id){
                 result =  index;
