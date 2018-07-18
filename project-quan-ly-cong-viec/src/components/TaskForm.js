@@ -10,6 +10,10 @@ class TaskForm extends Component {
             staus : false
         }
     }
+    // Khi form dc gắn vào thì licycle này sẽ được gọi,chỉ đc gọi duy nhất 1 lần khi component đc gắn vào
+    componentWillMount(){
+        console.log('componentWillMount');
+    }
     // Thực hiện đóng Form Thêm công việc
     onCloseForm  = () =>{
         this.props.onCloseForm();

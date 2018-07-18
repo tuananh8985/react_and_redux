@@ -19,10 +19,9 @@ class App extends Component {
     constructor(props){
         super(props);
         this.state = {
-            tasks : [
-
-            ],
-            isDisplayFrom : false //check xem có hiển thị Form Thêm công việc hay không
+            tasks : [],
+            isDisplayFrom : false, //check xem có hiển thị Form Thêm công việc hay không
+            taskEditing : null
         };
     }
     // Được gọi khi trang refresh lại trang hay là được gọi khi Component được gắn vào.Chi dc goi duy nhat 1 lần
@@ -80,6 +79,12 @@ class App extends Component {
             isDisplayFrom : false
         });
     }
+
+    onShowForm = () =>{
+        this.setState({
+            isDisplayFrom : true
+        });
+    }
     // Cập nhật trạng thái-->Update status
     onUpdateStatus = (id) =>{
         var { tasks } = this.state;
@@ -123,6 +128,23 @@ class App extends Component {
         // Thực hiện đóng form thêm công việc.
         this.onCloseForm();
     }
+
+    onUpdate = (id) =>{
+        var { tasks } = this.state;
+        // Hàm findIndex trả về index của bản ghi khi chọn update status.
+        var index = this.findIndex(id);
+        // this.setState({
+        //     taskEditing : tasks[index]
+        // });
+        // console.log(this.state.taskEditing); =>neu làm như trên click đầu tiên sẽ bị null
+        // Cách khawxc phục
+        var taskEditing = tasks[index];
+        this.setState({
+            taskEditing : taskEditing
+        });
+        // Thực hiện mở form thêm công việc.
+        this.onShowForm();
+    }
     // Thực hiện submit form trên component TaskForm
     onSubmit = (data) => {
         var {tasks} = this.state;
@@ -135,9 +157,13 @@ class App extends Component {
     }
   render() {
 
-    var {tasks , isDisplayFrom } = this.state; // var tasks = this.state.tasks;
+    var {tasks , isDisplayFrom ,taskEditing } = this.state; // var tasks = this.state.tasks;
     var elmTaskForm = isDisplayFrom
-                    ? <TaskForm onSubmit = {this.onSubmit} onCloseForm = {this.onCloseForm} />
+                    ? <TaskForm 
+                        onSubmit = {this.onSubmit} 
+                        onCloseForm = {this.onCloseForm} 
+                        task = {taskEditing}
+                        />
                     : '';
     return (
         <div className="container">
@@ -172,6 +198,7 @@ class App extends Component {
                             tasks = {tasks} 
                             onUpdateStatus = {this.onUpdateStatus}
                             OnDelete = {this.OnDelete}
+                            onUpdate = {this.onUpdate}
                         />
                 </div>
             </div>
