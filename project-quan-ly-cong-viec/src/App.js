@@ -13,7 +13,7 @@ class App extends Component {
 
             ],
             isDisplayFrom : false
-        }
+        };
     }
     // Được gọi khi trang refresh lại trang hay là được gọi khi Component được gắn vào.Chi dc goi duy nhat 1 lần
     componentWillMount(){
@@ -57,7 +57,7 @@ class App extends Component {
         return this.s4() + this.s4()+'-'+this.s4()+'-'+this.s4()+'-'+this.s4()
         + this.s4()+this.s4()+this.s4();
     }
-    onToggleForm = () =>{
+    onToggleForm = () => {
         this.setState({
             isDisplayFrom = !this.state.isDisplayFrom
         });
@@ -69,7 +69,7 @@ class App extends Component {
         });
     }
 
-    onSubmit = (data) =>{
+    onSubmit = (data) => {
         var {tasks} = this.state;
         data.id = this.generateID();
         tasks.push(data);
@@ -80,43 +80,43 @@ class App extends Component {
     }
   render() {
 
-    var {tasks , isDisplayFrom?} = this.state; // var tasks = this.state.tasks;
+    var {tasks , isDisplayFrom } = this.state; // var tasks = this.state.tasks;
     var elmTaskForm = isDisplayFrom
-                    ?<TaskForm onSubmit = {this.onSubmit} onCloseForm = {this.onCloseForm} />
-                    :'';
+                    ? <TaskForm onSubmit = {this.onSubmit} onCloseForm = {this.onCloseForm} />
+                    : '';
     return (
         <div className="container">
-        <div className="text-center">
-            <h1>Quản Lý Công Việc</h1>
-            <hr/>
-        </div>
-        <div className="row">
-            <div className={isDisplayFrom ? 'col-xs-4 col-sm-4 col-md-4 col-lg-4':''}>
-            {/*<TaskForm/>*/}   
-            { elmTaskForm } 
+            <div className="text-center">
+                <h1>Quản Lý Công Việc</h1>
+                <hr/>
             </div>
-            <div className= {isDisplayFrom ? 'col-xs-8 col-sm-8 col-md-8 col-lg-8':'col-xs-12 col-sm-12 col-md-12 col-lg-12'}>
-                <button 
-                    type="button" 
-                    className="btn btn-primary"
-                    onClick = {this.onToggleForm}
-                >
-                    <span className="fa fa-plus mr-5"></span>Thêm Công Việc
-                </button>
+            <div className="row">
+                <div className={isDisplayFrom ? 'col-xs-4 col-sm-4 col-md-4 col-lg-4':''}>
+                {/*<TaskForm/>*/}   
+                { elmTaskForm } 
+                </div>
+                <div className= {isDisplayFrom ? 'col-xs-8 col-sm-8 col-md-8 col-lg-8':'col-xs-12 col-sm-12 col-md-12 col-lg-12'}>
+                    <button 
+                        type="button" 
+                        className="btn btn-primary"
+                        onClick = {this.onToggleForm}
+                    >
+                        <span className="fa fa-plus mr-5"></span>Thêm Công Việc
+                    </button>
 
-                <button 
-                    type="button" 
-                    className="btn btn-danger"
-                    onClick = {this.onGenerateData}
-                >
-                    Generate Data
-                </button>
-                    {/* Search And Sort*/}
-                    <Control/>
-                    <TaskList tasks = {tasks}/>
+                    <button 
+                        type="button" 
+                        className="btn btn-danger"
+                        onClick = {this.onGenerateData}
+                    >
+                        Generate Data
+                    </button>
+                        {/* Search And Sort*/}
+                        <Control/>
+                        <TaskList tasks = {tasks}/>
+                </div>
             </div>
         </div>
-    </div>
     );
   }
 }
