@@ -11,6 +11,7 @@ class TaskList extends Component {
                 index = {index} 
                 task ={task}
                 onUpdateStatus = {this.props.onUpdateStatus}
+                OnDelete = {this.props.OnDelete}
                 />
     });
     return (

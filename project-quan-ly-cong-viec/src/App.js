@@ -106,6 +106,23 @@ class App extends Component {
         });
         return  result;
     }
+
+    OnDelete = (id) =>{
+        var { tasks } = this.state;
+        // Hàm findIndex trả về index của bản ghi khi chọn update status.
+        var index = this.findIndex(id);
+        if(index !== -1){
+            // Thực hiện xóa
+            tasks.splice(index,1);
+            this.setState({
+                tasks : tasks
+            });
+            // Sau khi thiết lập state,cần lưu vào localStorage
+            localStorage.setItem('tasks',JSON.stringify(tasks));
+        }
+        // Thực hiện đóng form thêm công việc.
+        this.onCloseForm();
+    }
     // Thực hiện submit form trên component TaskForm
     onSubmit = (data) => {
         var {tasks} = this.state;
@@ -154,6 +171,7 @@ class App extends Component {
                         <TaskList 
                             tasks = {tasks} 
                             onUpdateStatus = {this.onUpdateStatus}
+                            OnDelete = {this.OnDelete}
                         />
                 </div>
             </div>

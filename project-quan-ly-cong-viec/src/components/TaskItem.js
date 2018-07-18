@@ -7,7 +7,9 @@ class TaskItem extends Component {
         // lấy ra id tương ứng với mỗi row dữ liệu.truyền ngược từ component TaskItem =>TaskList =>App
         this.props.onUpdateStatus(this.props.task.id)
     }
-
+    OnDelete = () =>{
+        this.props.OnDelete(this.props.task.id)
+    }
     render() {
         var {task,index} = this.props;
         return (
@@ -27,7 +29,11 @@ class TaskItem extends Component {
                         <span className="fa fa-pencil mr-5"></span>Sửa
                     </button>
                     &nbsp;
-                    <button type="button" className="btn btn-danger">
+                    <button 
+                        type="button" 
+                        className="btn btn-danger"
+                        onClick = {this.OnDelete}
+                    >
                         <span className="fa fa-trash mr-5"></span>Xóa
                     </button>
                 </td>
