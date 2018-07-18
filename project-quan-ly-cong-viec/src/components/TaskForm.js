@@ -1,3 +1,5 @@
+
+
 import React, { Component } from 'react';
 
 class TaskForm extends Component {
@@ -8,10 +10,11 @@ class TaskForm extends Component {
             staus : false
         }
     }
+    // Thực hiện đóng Form Thêm công việc
     onCloseForm  = () =>{
         this.props.onCloseForm();
     }
-
+    // Khi thay đổi input,lấy data thay đổi và lưu vào state
     onChange = (event) =>{
         var target = event.target;
         var name = target.name;
@@ -23,26 +26,29 @@ class TaskForm extends Component {
             [name] : value
         });
     }
-    onSubmit = (event) =>{
-        event.preventDefault();
-        this.props.onSubmit(this.state);
-        this.onClear();
-        this.onCloseForm();
-    }
-
+    // Clear form về giá trị ban đầu
     onClear = () =>{
         this.setState({
             name : '',
             status : false
         });
     }
+
+    // Khi thực hiện submit form =>sẽ gửi data sang component App để lưu data vào localStorage.
+    onSubmit = (event) =>{
+        event.preventDefault();
+        this.props.onSubmit(this.state);
+        // Thực hiện clear và close form.
+        this.onClear();
+        this.onCloseForm();
+    }
   render() {
     return (
         <div className="panel panel-warning">
             <div className="panel-heading">
-                <h3 className="panel-title">Thêm Công Việc</h3>
+                <h3 className="panel-title">Form Thêm Công Việc</h3>
                 <span 
-                    className = "fa fa-times-cicle text-right"
+                    className = "fa fa-times-circle text-right"
                     onClick = {this.onCloseForm}
                 ></span>
             </div>

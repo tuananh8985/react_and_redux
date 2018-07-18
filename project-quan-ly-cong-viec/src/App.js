@@ -1,4 +1,13 @@
 // this.setState là tạo các đối tượng,ko được dùng dấu bằng =;
+/* Sơ đồ Component
+    +)App
+    ++)TaskForm ==> Component tương ứng với botton Thêm Công Việc
+    ++)Control  ==>Tương ứng với tìm Kiếm và Sắp xếp
+        ++)Search
+        ++)Sort 
+    ++)TaskList ==>Danh sách bảng hiển thị
+        ++)TaskItem
+*/
 import React, { Component } from 'react';
 import './App.css';
 import TaskForm from './components/TaskForm';
@@ -13,12 +22,12 @@ class App extends Component {
             tasks : [
 
             ],
-            isDisplayFrom : false
+            isDisplayFrom : false //check xem có hiển thị Form Thêm công việc hay không
         };
     }
     // Được gọi khi trang refresh lại trang hay là được gọi khi Component được gắn vào.Chi dc goi duy nhat 1 lần
     componentWillMount(){
-        // Kiểm tra localStorage trc khi lưu.
+        // Kiểm tra thông tin lưu trong localStorage,sau đó gán vào state.
         if(localStorage && localStorage.getItem('tasks')){
             var tasks = JSON.parse(localStorage.getItem('tasks'));
             this.setState({
@@ -47,6 +56,7 @@ class App extends Component {
         this.setState({
             tasks :tasks
         });
+        // Thực hiện lưu data vào localStorage
         localStorage.setItem('tasks',JSON.stringify(tasks));
         console.log('tasks',tasks);
 
@@ -58,18 +68,42 @@ class App extends Component {
         return this.s4() + this.s4()+'-'+this.s4()+'-'+this.s4()+'-'+this.s4()
         + this.s4()+this.s4()+this.s4();
     }
+    // Click vào nút "Thêm Công Việc" trên App Component
     onToggleForm = () => {
         this.setState({
             isDisplayFrom : !this.state.isDisplayFrom
         });
     }
-
+    // Tương tác giữa component App và TaskForm. 
     onCloseForm = () => {
         this.setState({
             isDisplayFrom : false
         });
     }
-
+    // Cập nhật trạng thái
+    onUpdateStatus = (id) =>{
+        var { tasks } = this.state;
+        var index = this.findIndex(id);
+        if(index !== -1){
+            console.log('index',index);
+            tasks[index].status = !tasks[index].status;
+            this.setState({
+                tasks : tasks
+            });
+            localStorage.setItem('tasks',JSON.stringify(tasks));
+        }
+    }
+    findIndex = (id) =>{
+        var { tasks } = this.state;
+        var result = -1;
+        tasks.forEach((task,index) =>{
+            if(task.id === id){
+                result =  index;
+            }
+        });
+        return  result;
+    }
+    // Thực hiện submit form trên component TaskForm
     onSubmit = (data) => {
         var {tasks} = this.state;
         data.id = this.generateID();
@@ -114,7 +148,10 @@ class App extends Component {
                     </button>
                         {/* Search And Sort*/}
                         <Control/>
-                        <TaskList tasks = {tasks}/>
+                        <TaskList 
+                            tasks = {tasks} 
+                            onUpdateStatus = {this.onUpdateStatus}
+                        />
                 </div>
             </div>
         </div>
