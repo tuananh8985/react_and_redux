@@ -1,3 +1,4 @@
+// this.setState là tạo các đối tượng,ko được dùng dấu bằng =;
 import React, { Component } from 'react';
 import './App.css';
 import TaskForm from './components/TaskForm';
@@ -59,13 +60,13 @@ class App extends Component {
     }
     onToggleForm = () => {
         this.setState({
-            isDisplayFrom = !this.state.isDisplayFrom
+            isDisplayFrom : !this.state.isDisplayFrom
         });
     }
 
     onCloseForm = () => {
         this.setState({
-            isDisplayFrom = false
+            isDisplayFrom : false
         });
     }
 
@@ -75,7 +76,7 @@ class App extends Component {
         tasks.push(data);
         this.setState({
             tasks : tasks
-        });
+        })
         localStorage.setItem('tasks',JSON.stringify(tasks));
     }
   render() {
