@@ -62,8 +62,6 @@ class App extends Component {
         });
         // Thực hiện lưu data vào localStorage
         localStorage.setItem('tasks',JSON.stringify(tasks));
-        console.log('tasks',tasks);
-
     }
     s4(){
         return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
@@ -105,7 +103,6 @@ class App extends Component {
         // Hàm findIndex trả về index của bản ghi khi chọn update status.
         var index = this.findIndex(id);
         if(index !== -1){
-            console.log('index',index);
             tasks[index].status = !tasks[index].status;
             this.setState({
                 tasks : tasks
@@ -163,7 +160,7 @@ class App extends Component {
     onSubmit = (data) => {
         var {tasks} = this.state;
         // Nếu tạo mới
-        if(data.id === ''){
+        if(data.id === '' || data.id === undefined){
             data.id = this.generateID();
             tasks.push(data);
         }else{
@@ -191,8 +188,10 @@ class App extends Component {
   render() {
 
     var {tasks , isDisplayFrom ,taskEditing ,filter} = this.state; // var tasks = this.state.tasks;
+    
     if(filter){
         if(filter.name){
+            // thực hiện tìm kiếm
             tasks = tasks.filter((task) =>{
                 return task.name.toLowerCase().indexOf(filter.name) !== -1;
             });
@@ -201,7 +200,7 @@ class App extends Component {
             if(filter.status === -1){
                 return task;
             }else{
-                return task.status === (filter.status === 1 ? true ? false);
+                return task.status === (filter.status === 1 ? true : false);
             }
         });
     }

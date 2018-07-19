@@ -7,12 +7,13 @@ class TaskForm extends Component {
         super(props);
         this.state = {
             name : '',
-            staus : false
+            status : false
         }
     }
+    // Chỉ đc gọi khi chưa hiển thị ra và component mới đc gắn vào.
     // Khi form dc gắn vào thì licycle này sẽ được gọi,chỉ đc gọi duy nhất 1 lần khi component đc gắn vào
-    componentWillMount(){
 
+    componentWillMount(){
         if(this.props.task){
             this.setState({
                 id : this.props.task.id,
@@ -22,8 +23,11 @@ class TaskForm extends Component {
         }
         console.log('componentWillMount');
     }
-
-    // 
+    /*  Chính thống : 
+    Hàm này được chạy khi mà props của component đã được sinh ra có sự thay đổi.
+    Phải gọi setState() nếu muốn render lại. 
+    */
+    // Khi form edit đã bật lên rồi ta vẫn nhận đc props
     componentWillReceiveProps(nextProps){
         if(nextProps && nextProps.task){
             this.setState({
@@ -79,7 +83,7 @@ class TaskForm extends Component {
         <div className="panel panel-warning">
             <div className="panel-heading">
                 <h3 className="panel-title">
-                { id !== ''?'Cập nhật công việc':'Form Thêm Công Việc'}
+                { id === '' || id === undefined ?'Thêm Công Việc':'Cập nhật công việc'}
                 <span 
                     className = "fa fa-times-circle text-right"
                     onClick = {this.onCloseForm}
