@@ -2,9 +2,31 @@ import React, { Component } from 'react';
 import TaskItem from'./TaskItem';
 
 class TaskList extends Component {
-  render() {
 
+    constructor(props){
+        super(props);
+        this.state = {
+            filterName : '',
+            filterStatus : -1 // -1 là tất cả,0 là ẩn,1 là kích hoạt
+        }
+    }
+
+    onChange = (event) => {
+        var target = event.target;
+        var name = target.name;
+        var value = target.value;
+        // Gán props cho App
+        this.props.onFilter(
+                name === 'filterName' ? value : this.state.filterName,
+                name === 'filterStatus' ? value : this.state.filterStatus,
+        )
+        this.state = {
+            [name] : value
+        }
+    }
+  render() {
     var {tasks} = this.props; //var tasks = this.props.tasks;Cu phap ES6
+    var { filterName,filterStatus } = this.state;
     var elmTasks = tasks.map((task,index) =>{
         return <TaskItem 
                 key={task.id} 
@@ -29,7 +51,12 @@ class TaskList extends Component {
             <tr>
                 <td></td>
                 <td>
-                    <input type="text" className="form-control" />
+                    <input 
+                        type="text" 
+                        className="form-control"
+                        value = {filterName} 
+                        onChange = {this.onChange}
+                    />
                 </td>
                 <td>
                     <select className="form-control">

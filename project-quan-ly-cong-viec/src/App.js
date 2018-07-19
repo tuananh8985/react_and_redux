@@ -21,7 +21,12 @@ class App extends Component {
         this.state = {
             tasks : [],
             isDisplayFrom : false, //check xem có hiển thị Form Thêm công việc hay không
-            taskEditing : null
+            taskEditing : null,
+            // Tạo thêm object filter để setting cho chức năng search.
+            filter : {
+                name : '',
+                status : -1
+            }
         };
     }
     // Được gọi khi trang refresh lại trang hay là được gọi khi Component được gắn vào.Chi dc goi duy nhat 1 lần
@@ -163,7 +168,7 @@ class App extends Component {
             tasks.push(data);
         }else{
             // Nếu edit
-            var index = this.findIndex(id);
+            var index = this.findIndex(data.id);
             tasks[index]  = data;
         }
         // data.id = this.generateID();
@@ -171,12 +176,35 @@ class App extends Component {
         this.setState({
             tasks : tasks,
             taskEditing : null //gán lại taskEditing là null
-        })
+        });
         localStorage.setItem('tasks',JSON.stringify(tasks));
+    }
+    onFilter = (filterName,filterStatus) =>{
+        filterStatus = parseInt(filterStatus,10);//Ép kiểu string sang kiểu Int
+        this.setState({
+            filter : {
+                name : filterName.toLowerCase(),
+                status: filterStatus
+            }
+        });
     }
   render() {
 
-    var {tasks , isDisplayFrom ,taskEditing } = this.state; // var tasks = this.state.tasks;
+    var {tasks , isDisplayFrom ,taskEditing ,filter} = this.state; // var tasks = this.state.tasks;
+    if(filter){
+        if(filter.name){
+            tasks = tasks.filter((task) =>{
+                return task.name.toLowerCase().indexOf(filter.name) !== -1;
+            });
+        }
+        tasks = tasks.filter((task) => {
+            if(filter.status === -1){
+                return task;
+            }else{
+                return task.status === (filter.status === 1 ? true ? false);
+            }
+        });
+    }
     var elmTaskForm = isDisplayFrom
                     ? <TaskForm 
                         onSubmit = {this.onSubmit} 
@@ -218,6 +246,7 @@ class App extends Component {
                             onUpdateStatus = {this.onUpdateStatus}
                             OnDelete = {this.OnDelete}
                             onUpdate = {this.onUpdate}
+                            onFilter = {this.onFilter}
                         />
                 </div>
             </div>
