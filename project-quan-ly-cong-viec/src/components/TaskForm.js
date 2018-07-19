@@ -12,7 +12,33 @@ class TaskForm extends Component {
     }
     // Khi form dc gắn vào thì licycle này sẽ được gọi,chỉ đc gọi duy nhất 1 lần khi component đc gắn vào
     componentWillMount(){
+
+        if(this.props.task){
+            this.setState({
+                id : this.props.task.id,
+                name : this.props.task.name,
+                status : this.props.task.status
+            });
+        }
         console.log('componentWillMount');
+    }
+
+    // 
+    componentWillReceiveProps(nextProps){
+        if(nextProps && nextProps.task){
+            this.setState({
+                id : nextProps.task.id,
+                name : nextProps.task.name,
+                status : nextProps.task.status
+            });
+        }else if(!nextProps.task){
+            // Trường hợp chuyển từ sửa thành thêm
+            this.setState({
+                id : '',
+                name : '',
+                status : false
+            });    
+        }
     }
     // Thực hiện đóng Form Thêm công việc
     onCloseForm  = () =>{
@@ -47,14 +73,19 @@ class TaskForm extends Component {
         this.onCloseForm();
     }
   render() {
+    // Dựa vào id để kiểm tra lúc nào là màn thêm công việc hay cập nhật công việc
+    var { id } = this.state;
     return (
         <div className="panel panel-warning">
             <div className="panel-heading">
-                <h3 className="panel-title">Form Thêm Công Việc</h3>
+                <h3 className="panel-title">
+                { id !== ''?'Cập nhật công việc':'Form Thêm Công Việc'}
                 <span 
                     className = "fa fa-times-circle text-right"
                     onClick = {this.onCloseForm}
                 ></span>
+                </h3>
+                
             </div>
             <div className="panel-body">
                 <form  onSubmit = {this.onSubmit}>

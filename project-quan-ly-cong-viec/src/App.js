@@ -69,9 +69,18 @@ class App extends Component {
     }
     // Click vào nút "Thêm Công Việc" trên App Component
     onToggleForm = () => {
-        this.setState({
-            isDisplayFrom : !this.state.isDisplayFrom
-        });
+        if(this.state.isDisplayFrom && this.state.taskEditing !== null){
+            this.setState({
+                isDisplayFrom : true,
+                taskEditing : null // Thiết lập để ko hiển thị form edit
+            }); 
+        }else{
+            this.setState({
+                isDisplayFrom : !this.state.isDisplayFrom,
+                taskEditing : null // Thiết lập để ko hiển thị form edit
+            });    
+        }
+        
     }
     // Tương tác giữa component App và TaskForm. 
     onCloseForm = () => {
@@ -148,10 +157,20 @@ class App extends Component {
     // Thực hiện submit form trên component TaskForm
     onSubmit = (data) => {
         var {tasks} = this.state;
-        data.id = this.generateID();
-        tasks.push(data);
+        // Nếu tạo mới
+        if(data.id === ''){
+            data.id = this.generateID();
+            tasks.push(data);
+        }else{
+            // Nếu edit
+            var index = this.findIndex(id);
+            tasks[index]  = data;
+        }
+        // data.id = this.generateID();
+        // tasks.push(data);
         this.setState({
-            tasks : tasks
+            tasks : tasks,
+            taskEditing : null //gán lại taskEditing là null
         })
         localStorage.setItem('tasks',JSON.stringify(tasks));
     }
