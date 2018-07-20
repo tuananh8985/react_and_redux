@@ -10,12 +10,12 @@ class TaskList extends Component {
             filterStatus : -1 // -1 là tất cả,0 là ẩn,1 là kích hoạt
         }
     }
-
+    // Khi thực hiện thay đổi input hay select =>Lưu thông tin vào state của component.
+    // Sau đó truyền props của TaskList cho App để xử lý
     onChange = (event) => {
         var target = event.target;
         var name = target.name;
         var value = target.value;
-        // Gán props cho App
         this.props.onFilter(
                 name === 'filterName' ? value : this.state.filterName,
                 name === 'filterStatus' ? value : this.state.filterStatus,
@@ -24,6 +24,8 @@ class TaskList extends Component {
             [name] : value
         });
     }
+
+
   render() {
     var {tasks} = this.props; //var tasks = this.props.tasks;Cu phap ES6
     var { filterName,filterStatus } = this.state;
@@ -37,6 +39,7 @@ class TaskList extends Component {
                 onUpdate = {this.props.onUpdate}
                 />
     });
+
     return (
         <table className="table table-bordered table-hover mt-15">
         <thead>

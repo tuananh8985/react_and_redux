@@ -2,11 +2,11 @@
 /* Sơ đồ Component
     +)App
     ++)TaskForm ==> Component tương ứng với botton Thêm Công Việc
+    ++)TaskList ==>Danh sách bảng hiển thị
+        ++)TaskItem
     ++)Control  ==>Tương ứng với tìm Kiếm và Sắp xếp
         ++)Search
         ++)Sort 
-    ++)TaskList ==>Danh sách bảng hiển thị
-        ++)TaskItem
 */
 import React, { Component } from 'react';
 import './App.css';
@@ -26,7 +26,8 @@ class App extends Component {
             filter : {
                 name : '',
                 status : -1
-            }
+            },
+            keyword : ''
         };
     }
     // Được gọi khi trang refresh lại trang hay là được gọi khi Component được gắn vào.Chi dc goi duy nhat 1 lần
@@ -39,6 +40,7 @@ class App extends Component {
             });
         }
     }
+    // I.CÁC HÀM HELPER
     onGenerateData = () =>{
         var tasks = [
             {
@@ -60,7 +62,6 @@ class App extends Component {
         this.setState({
             tasks :tasks
         });
-        // Thực hiện lưu data vào localStorage
         localStorage.setItem('tasks',JSON.stringify(tasks));
     }
     s4(){
@@ -70,47 +71,7 @@ class App extends Component {
         return this.s4() + this.s4()+'-'+this.s4()+'-'+this.s4()+'-'+this.s4()
         + this.s4()+this.s4()+this.s4();
     }
-    // Click vào nút "Thêm Công Việc" trên App Component
-    onToggleForm = () => {
-        if(this.state.isDisplayFrom && this.state.taskEditing !== null){
-            this.setState({
-                isDisplayFrom : true,
-                taskEditing : null // Thiết lập để ko hiển thị form edit
-            }); 
-        }else{
-            this.setState({
-                isDisplayFrom : !this.state.isDisplayFrom,
-                taskEditing : null // Thiết lập để ko hiển thị form edit
-            });    
-        }
-        
-    }
-    // Tương tác giữa component App và TaskForm. 
-    onCloseForm = () => {
-        this.setState({
-            isDisplayFrom : false
-        });
-    }
-
-    onShowForm = () =>{
-        this.setState({
-            isDisplayFrom : true
-        });
-    }
-    // Cập nhật trạng thái-->Update status
-    onUpdateStatus = (id) =>{
-        var { tasks } = this.state;
-        // Hàm findIndex trả về index của bản ghi khi chọn update status.
-        var index = this.findIndex(id);
-        if(index !== -1){
-            tasks[index].status = !tasks[index].status;
-            this.setState({
-                tasks : tasks
-            });
-            // Sau khi thiết lập state,cần lưu vào localStorage
-            localStorage.setItem('tasks',JSON.stringify(tasks));
-        }
-    }
+    // Kiểm tra trả về index vơi id tương ứng
     findIndex = (id) =>{
         var { tasks } = this.state;
         var result = -1;
@@ -122,60 +83,9 @@ class App extends Component {
         });
         return  result;
     }
-
-    OnDelete = (id) =>{
-        var { tasks } = this.state;
-        // Hàm findIndex trả về index của bản ghi khi chọn update status.
-        var index = this.findIndex(id);
-        if(index !== -1){
-            // Thực hiện xóa
-            tasks.splice(index,1);
-            this.setState({
-                tasks : tasks
-            });
-            // Sau khi thiết lập state,cần lưu vào localStorage
-            localStorage.setItem('tasks',JSON.stringify(tasks));
-        }
-        // Thực hiện đóng form thêm công việc.
-        this.onCloseForm();
-    }
-
-    onUpdate = (id) =>{
-        var { tasks } = this.state;
-        // Hàm findIndex trả về index của bản ghi khi chọn update status.
-        var index = this.findIndex(id);
-        // this.setState({
-        //     taskEditing : tasks[index]
-        // });
-        // console.log(this.state.taskEditing); =>neu làm như trên click đầu tiên sẽ bị null
-        // Cách khawxc phục
-        var taskEditing = tasks[index];
-        this.setState({
-            taskEditing : taskEditing
-        });
-        // Thực hiện mở form thêm công việc.
-        this.onShowForm();
-    }
-    // Thực hiện submit form trên component TaskForm
-    onSubmit = (data) => {
-        var {tasks} = this.state;
-        // Nếu tạo mới
-        if(data.id === '' || data.id === undefined){
-            data.id = this.generateID();
-            tasks.push(data);
-        }else{
-            // Nếu edit
-            var index = this.findIndex(data.id);
-            tasks[index]  = data;
-        }
-        // data.id = this.generateID();
-        // tasks.push(data);
-        this.setState({
-            tasks : tasks,
-            taskEditing : null //gán lại taskEditing là null
-        });
-        localStorage.setItem('tasks',JSON.stringify(tasks));
-    }
+    // II_CÁC HÀM CHỨC NĂNG TƯƠNG TÁC VỚI COMPONENT
+    /*----TaskList----*/
+    // TaskList:Chức năng filter theo tên và trạng thái
     onFilter = (filterName,filterStatus) =>{
         filterStatus = parseInt(filterStatus,10);//Ép kiểu string sang kiểu Int
         this.setState({
@@ -185,10 +95,106 @@ class App extends Component {
             }
         });
     }
-  render() {
 
-    var {tasks , isDisplayFrom ,taskEditing ,filter} = this.state; // var tasks = this.state.tasks;
+    /*----TaskForm----*/
+    // TaskForm:Đóng TaskForm
+    onCloseForm = () => {
+        this.setState({
+            isDisplayFrom : false
+        });
+    }
+
+    // TaskForm:Hiện TaskForm
+    onShowForm = () =>{
+        this.setState({
+            isDisplayFrom : true
+        });
+    }
+
+    // TaskForm:Kiểm tra và hiển thị TaskForm_Edit hay TaskForm_Add
+    onToggleForm = () => {
+        if(this.state.isDisplayFrom && this.state.taskEditing !== null){ 
+            this.setState({
+                isDisplayFrom : true,
+                taskEditing : null // Thiết lập để ko hiển thị form edit
+            }); 
+        }else{
+            // Đầu tiên khi click sẽ ẩn hay hiện form TaskForm
+            this.setState({
+                isDisplayFrom : !this.state.isDisplayFrom,
+                taskEditing : null // Thiết lập để ko hiển thị form edit
+            });    
+        }
+        
+    }
+
+    // TaskForm:Chức năng submit khi thực hiện "Thêm" TaskForm
+    onSubmit = (data) => {
+        var {tasks} = this.state;
+            // Nếu tạo mới data
+        if(data.id === '' || data.id === undefined){
+            data.id = this.generateID();
+            tasks.push(data);
+        }else{
+            // Nếu edit data
+            var index = this.findIndex(data.id);
+            tasks[index]  = data;
+        }
+        this.setState({
+            tasks : tasks,
+            taskEditing : null //gán lại taskEditing là null
+        });
+        localStorage.setItem('tasks',JSON.stringify(tasks));
+    }
+    /*----TaskItem----*/
+    // TaskItem:Chưc năng "Sửa" trên TaskItem =>truyền id từ  TaskItem =>TaskList => App.
+    onUpdate = (id) =>{
+        var { tasks } = this.state;
+        var index = this.findIndex(id);
+        // this.setState({
+        //     taskEditing : tasks[index]
+        // });
+        // console.log(this.state.taskEditing); =>neu làm như trên click đầu tiên sẽ bị null
+        // Cách khắc phục
+        var taskEditing = tasks[index];
+        this.setState({
+            taskEditing : taskEditing
+        });
+        // Thực hiện hiện TaskForm_Sửa.
+        this.onShowForm();
+    }
+
+    // TaskItem:Chưc năng "Xóa" trên TaskItem =>truyền id từ  TaskItem =>TaskList => App.
+    OnDelete = (id) =>{
+        var { tasks } = this.state;
+        // Hàm findIndex trả về index của bản ghi khi chọn update status.
+        var index = this.findIndex(id);
+        if(index !== -1){
+            tasks.splice(index,1); //Hàm splice =>gõ bỏ 1 phần tử ở vị trí tương ứng.
+            this.setState({
+                tasks : tasks
+            });
+            localStorage.setItem('tasks',JSON.stringify(tasks));
+        }
+        this.onCloseForm();
+    }
+
+    // TaskItem:Chưc năng "Cập nhật" status trên TaskItem =>truyền id từ  TaskItem =>TaskList => App.
+    onUpdateStatus = (id) =>{
+        var { tasks } = this.state;
+        var index = this.findIndex(id);
+        if(index !== -1){
+            tasks[index].status = !tasks[index].status;
+            this.setState({
+                tasks : tasks
+            });
+            localStorage.setItem('tasks',JSON.stringify(tasks));
+        }
+    }
     
+    
+  render() {
+    var {tasks , isDisplayFrom ,taskEditing ,filter} = this.state; // var tasks = this.state.tasks;
     if(filter){
         if(filter.name){
             // thực hiện tìm kiếm
@@ -204,6 +210,7 @@ class App extends Component {
             }
         });
     }
+    // Kiểm tra nếu isDisplayFrom = true =>Sẽ hiện thị TaskForm,ngược lại thì không.
     var elmTaskForm = isDisplayFrom
                     ? <TaskForm 
                         onSubmit = {this.onSubmit} 
@@ -211,6 +218,7 @@ class App extends Component {
                         task = {taskEditing}
                         />
                     : '';
+
     return (
         <div className="container">
             <div className="text-center">

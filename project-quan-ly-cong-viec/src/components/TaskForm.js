@@ -12,7 +12,6 @@ class TaskForm extends Component {
     }
     // Chỉ đc gọi khi chưa hiển thị ra và component mới đc gắn vào.
     // Khi form dc gắn vào thì licycle này sẽ được gọi,chỉ đc gọi duy nhất 1 lần khi component đc gắn vào
-
     componentWillMount(){
         if(this.props.task){
             this.setState({
@@ -44,11 +43,11 @@ class TaskForm extends Component {
             });    
         }
     }
-    // Thực hiện đóng Form Thêm công việc
+    // Props : TaskForm => App :Truyền Props từ TaskForm sang App để đóng form
     onCloseForm  = () =>{
         this.props.onCloseForm();
     }
-    // Khi thay đổi input,lấy data thay đổi và lưu vào state
+    // Lưu lại trạng thái vào biến state =>khi thay đổi input hay select
     onChange = (event) =>{
         var target = event.target;
         var name = target.name;
@@ -60,7 +59,7 @@ class TaskForm extends Component {
             [name] : value
         });
     }
-    // Clear form về giá trị ban đầu
+    // Reset form về giá trị ban đầu
     onClear = () =>{
         this.setState({
             name : '',
@@ -68,7 +67,7 @@ class TaskForm extends Component {
         });
     }
 
-    // Khi thực hiện submit form =>sẽ gửi data sang component App để lưu data vào localStorage.
+    // Truyền biến props là onSubmit sang cho component App
     onSubmit = (event) =>{
         event.preventDefault();
         this.props.onSubmit(this.state);
@@ -76,9 +75,13 @@ class TaskForm extends Component {
         this.onClear();
         this.onCloseForm();
     }
+
+
+
   render() {
     // Dựa vào id để kiểm tra lúc nào là màn thêm công việc hay cập nhật công việc
     var { id } = this.state;
+    
     return (
         <div className="panel panel-warning">
             <div className="panel-heading">

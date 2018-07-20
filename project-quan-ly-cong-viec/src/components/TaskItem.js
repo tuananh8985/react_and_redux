@@ -2,18 +2,20 @@ import React, { Component } from 'react';
 
 
 class TaskItem extends Component {
+    // Truyền  id từ component TaskItem =>TaskList =>App
     onUpdateStatus = () => {
-        //console.log(this.props.task.id);
-        // lấy ra id tương ứng với mỗi row dữ liệu.truyền ngược từ component TaskItem =>TaskList =>App
         this.props.onUpdateStatus(this.props.task.id)
     }
+    // Truyền  id từ component TaskItem =>TaskList =>App
     OnDelete = () =>{
         this.props.OnDelete(this.props.task.id)
     }
-
+    // Truyền  id từ component TaskItem =>TaskList =>App
     onUpdate = () =>{
         this.props.onUpdate(this.props.task.id)
     }
+
+    
     render() {
         var {task,index} = this.props;
         return (
