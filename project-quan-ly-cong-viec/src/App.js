@@ -4,14 +4,14 @@
     ++)TaskForm ==> Component tương ứng với botton Thêm Công Việc
     ++)TaskList ==>Danh sách bảng hiển thị
         ++)TaskItem
-    ++)Control  ==>Tương ứng với tìm Kiếm và Sắp xếp
+    ++)TaskControl  ==>Tương ứng với tìm Kiếm và Sắp xếp
         ++)Search
         ++)Sort 
 */
 import React, { Component } from 'react';
 import './App.css';
 import TaskForm from './components/TaskForm';
-import Control from './components/Control';
+import TaskControl from './components/TaskControl';
 import TaskList from './components/TaskList';
 
 
@@ -27,7 +27,9 @@ class App extends Component {
                 name : '',
                 status : -1
             },
-            keyword : ''
+            keyword : '', //Dùng để lưu các key của thanh tìm kiếm,
+            sortBy : 'name',
+            sortValue : 1
         };
     }
     // Được gọi khi trang refresh lại trang hay là được gọi khi Component được gắn vào.Chi dc goi duy nhat 1 lần
@@ -192,11 +194,25 @@ class App extends Component {
         }
     }
     
-    
+    onSearch = (keyword) =>{
+        this.setState({
+            keyword : keyword
+        });
+    }
+
+    onSort = (sortBy,sortValue) => {
+        this.setState({
+            sortBy : sortBy,
+            sortValue : sortValue
+        });
+    }
   render() {
-    var {tasks , isDisplayFrom ,taskEditing ,filter} = this.state; // var tasks = this.state.tasks;
+    //   Gọi biến
+    var {tasks , isDisplayFrom ,taskEditing ,filter,keyword,sortBy,sortValue} = this.state; // var tasks = this.state.tasks;
+    console.log(sortBy,'-',sortValue);
     if(filter){
         if(filter.name){
+            
             // thực hiện tìm kiếm
             tasks = tasks.filter((task) =>{
                 return task.name.toLowerCase().indexOf(filter.name) !== -1;
@@ -210,6 +226,27 @@ class App extends Component {
             }
         });
     }
+    //Kiểm tra biến keyword,và search trong danh sách xem có các giá trị nào
+    if(keyword){
+        tasks = tasks.filter((task) => {
+            return task.name.toLowerCase().indexOf(keyword) !== -1;
+        });
+    }
+    // Nếu có sắp xếp.
+    if(sortBy === "name"){
+        tasks.sort((a,b) =>{
+            console.log('a.name',a.name,'b.name',b.name);
+            if(a.name > b.name) return sortValue;
+            else if(a.name < b.name) return -sortValue;
+            else return 0;
+        });
+    }else{
+        tasks.sort((a,b) =>{
+            if(a.status > b.status) return -sortValue;
+            else if(a.status < b.status) return sortValue;
+            else return 0;
+        });
+    }
     // Kiểm tra nếu isDisplayFrom = true =>Sẽ hiện thị TaskForm,ngược lại thì không.
     var elmTaskForm = isDisplayFrom
                     ? <TaskForm 
@@ -219,6 +256,7 @@ class App extends Component {
                         />
                     : '';
 
+    
     return (
         <div className="container">
             <div className="text-center">
@@ -247,7 +285,12 @@ class App extends Component {
                         Generate Data
                     </button>
                         {/* Search And Sort*/}
-                        <Control/>
+                        <TaskControl 
+                            onSearch ={this.onSearch}
+                            onSort = {this.onSort}
+                            sortBy = {sortBy}
+                            sortValue = {sortValue}
+                            />
                         <TaskList 
                             tasks = {tasks} 
                             onUpdateStatus = {this.onUpdateStatus}
